@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float moveSpeed;
     private bool attack;
+    private bool slide;
     private bool facingRight;
 
     // Use this for initialization
@@ -36,16 +37,26 @@ public class Player : MonoBehaviour
         handleAttack();
         resetValues();
 	}
-
+    //Hanle player movement and its animation
     private void handelMovement(float horizontal)
     {
-        if(!this.myAnimator.GetCurrentAnimatorStateInfo(0).IsTag("Attack"))//Prevent player from moving if a animation with the tag Attack is active
+        if(!myAnimator.GetBool("slide") && !this.myAnimator.GetCurrentAnimatorStateInfo(0).IsTag("Attack"))//Prevent player from moving if a animation with the tag Attack is active
         {
             myRigidbody.velocity = new Vector2(horizontal * moveSpeed, myRigidbody.velocity.y);
         }
         myAnimator.SetFloat("speed", Mathf.Abs(horizontal));//mathf.abs is used so we dont return a negative value
+
+        if (slide && !this.myAnimator.GetCurrentAnimatorStateInfo(0).IsTag("Slide"))
+        {
+            myAnimator.SetBool("slide", true);
+        }
+        else if(!this.myAnimator.GetCurrentAnimatorStateInfo(0).IsTag("Slide"))
+        {
+            myAnimator.SetBool("slide", false);
+        }
     }
 
+    //Handle player attack and its animation
     private void handleAttack()
     {
         if(attack && !this.myAnimator.GetCurrentAnimatorStateInfo(0).IsTag("Attack"))//prevent player from attack until the animation is finished
@@ -55,14 +66,20 @@ public class Player : MonoBehaviour
         }
     }
 
+    //Handle player inputs and it animations
     private void handleInput()
     {
         if(Input.GetKeyDown(KeyCode.L))
         {
             attack = true;
         }
+        if(Input.GetKeyDown(KeyCode.K))
+        {
+            slide = true;
+        }
     }
 
+    //Flip the player depending on the input
     private void flip(float horizontal)
     {
         if(horizontal>0 && !facingRight || horizontal<0 && facingRight)
@@ -76,8 +93,10 @@ public class Player : MonoBehaviour
         }
     }
 
+    //Reset values function
     private void resetValues()
     {
         attack = false;
+        slide = false;
     }
 }
