@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : Character//inhierit stuff from Character script
 {
     private static Player instance;
     public static Player Instance
@@ -17,13 +17,9 @@ public class Player : MonoBehaviour
         }
 
     }
-
-    private Animator myAnimator;
-    [SerializeField]//Makes private float moveSpeed viseble in the inspector
-    private float moveSpeed;
+    
     [SerializeField]
     private float slideSpeed;
-    private bool facingRight;
     [SerializeField]
     private Transform[] groundPoints;
     [SerializeField]
@@ -35,19 +31,18 @@ public class Player : MonoBehaviour
     [SerializeField]
     private bool airControll;
     public Rigidbody2D MyRigibody { get; set; }
-    public bool Attack { get; set; }
     public bool Slide { get; set; }
     public bool Jump { get; set; }
     public bool OnGround { get; set; }
     
     // Use this for initialization
-    void Start()
+    public override void Start()//overide is used so can overide a code that has the same name expet virtual instead of overide. (close???)
     {
-        facingRight = true;//makes player allways facing right at start of the game
+        base.Start();//this is used so our Character is calling the star function
         //makes a reference to players Rigidbody
         MyRigibody = GetComponent<Rigidbody2D>();
         //makes a reference to players animator
-        myAnimator = GetComponent<Animator>();
+        
     }
     // Update is called once per frame
     void Update()
@@ -69,7 +64,7 @@ public class Player : MonoBehaviour
     {
         if (MyRigibody.velocity.y < 0)
         {
-            myAnimator.SetBool("land", true);
+            MyAnimator.SetBool("land", true);
         }
         if (!Attack && !Slide && (OnGround || airControll))
         {
@@ -79,7 +74,7 @@ public class Player : MonoBehaviour
         {
             MyRigibody.AddForce(new Vector2(0, jumpForce));
         }
-        myAnimator.SetFloat("speed", Mathf.Abs(horizontal));
+        MyAnimator.SetFloat("speed", Mathf.Abs(horizontal));
     }
     
     //Handle player inputs and it animations
@@ -87,19 +82,19 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            myAnimator.SetTrigger("jump");
+            MyAnimator.SetTrigger("jump");
         }
         if (Input.GetKeyDown(KeyCode.L))
         {
-            myAnimator.SetTrigger("attack");
+            MyAnimator.SetTrigger("attack");
         }
         if (Input.GetKeyDown(KeyCode.K))
         {
-            myAnimator.SetTrigger("slide");
+            MyAnimator.SetTrigger("slide");
         }
         if (Input.GetKeyDown(KeyCode.P))
         {
-            myAnimator.SetTrigger("shoot");
+            MyAnimator.SetTrigger("shoot");
         }
     }
 
@@ -108,12 +103,7 @@ public class Player : MonoBehaviour
     {
         if (horizontal > 0 && !facingRight || horizontal < 0 && facingRight)
         {
-            facingRight = !facingRight;
-            Vector3 theScale = transform.localScale;
-
-            theScale.x *= -1;
-
-            transform.localScale = theScale;
+            ChangeDirections();
         }
     }
 
@@ -140,11 +130,20 @@ public class Player : MonoBehaviour
     {
         if (!OnGround)
         {
-            myAnimator.SetLayerWeight(1, 1);
+            MyAnimator.SetLayerWeight(1, 1);
         }
         else
         {
-            myAnimator.SetLayerWeight(1, 0);
+            MyAnimator.SetLayerWeight(1, 0);
         }
     }
+
+    public override void ShootBullet(int value)
+    {
+        if (!OnGround && value == 0 || OnGround && value ==0)
+        {
+            base.ShootBullet(value);
+        }
+    }
+
 }
