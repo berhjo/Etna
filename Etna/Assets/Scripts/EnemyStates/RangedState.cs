@@ -5,7 +5,9 @@ using UnityEngine;
 public class RangedState : IEnemyState
 {
     private Enemy enemy;
-
+    private float throwTimer;
+    private float throwCoolDown = 3;
+    private bool canThrow;
     public void Enter(Enemy enemy)
     {
         this.enemy = enemy;
@@ -13,6 +15,7 @@ public class RangedState : IEnemyState
 
     public void Execute()
     {
+        ThrowKnife();
         Debug.Log("Ranged");
         if (enemy.Target != null)
         {
@@ -33,5 +36,19 @@ public class RangedState : IEnemyState
     {
 
     }
+    private void ThrowKnife()
+    {
+        throwTimer += Time.deltaTime;
+        if (throwTimer >= throwCoolDown)
+        {
+            canThrow = true;
+            throwTimer = 0;//resets the timer if true
+        }
 
+        if (canThrow)
+        {
+            canThrow = false;
+            enemy.MyAnimator.SetTrigger("shoot");
+        }
+    }
 }

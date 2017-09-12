@@ -48,8 +48,12 @@ public class Enemy : Character
 
     public void Move()
     {
-        MyAnimator.SetFloat("speed", 1);
-        transform.Translate(GetDirection() * (moveSpeed * Time.deltaTime));
+        if (!Attack)
+        {
+            MyAnimator.SetFloat("speed", 1);
+            transform.Translate(GetDirection() * (moveSpeed * Time.deltaTime));
+        }
+        
     }
     //Get's the dircetion player is facing
     public Vector2 GetDirection()
