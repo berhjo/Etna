@@ -41,7 +41,6 @@ public class Player : Character//inhierit stuff from Character script
         base.Start();//this is used so our Character is calling the star function
         //makes a reference to players Rigidbody
         MyRigibody = GetComponent<Rigidbody2D>();
-        //makes a reference to players animator
         
     }
     // Update is called once per frame
@@ -64,7 +63,9 @@ public class Player : Character//inhierit stuff from Character script
     {
         if (MyRigibody.velocity.y < 0)
         {
+           
             MyAnimator.SetBool("land", true);
+            
         }
         if (!Attack && !Slide && (OnGround || airControll))
         {
@@ -83,6 +84,7 @@ public class Player : Character//inhierit stuff from Character script
         if (Input.GetKeyDown(KeyCode.Space))
         {
             MyAnimator.SetTrigger("jump");
+          
         }
         if (Input.GetKeyDown(KeyCode.L))
         {

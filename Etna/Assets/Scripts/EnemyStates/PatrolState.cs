@@ -18,7 +18,7 @@ public class PatrolState : IEnemyState
         Debug.Log("Patrol");
         Patrol();
         enemy.Move();
-
+        
         if (enemy.transform != null)//if enemy is in patrolState and Player is in range, changes state to rangedState
         {
             enemy.ChangeState(new RangedState());
@@ -40,7 +40,7 @@ public class PatrolState : IEnemyState
 
     private void Patrol()
     {
-
+        
         patrolTimer += Time.deltaTime;
 
         if (patrolTimer >= patrolDuration)

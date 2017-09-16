@@ -12,6 +12,7 @@ public class EnemySight : MonoBehaviour
         if (other.tag == "Player")
         {
             enemy.Target = other.gameObject;
+            
         }
     }
 
